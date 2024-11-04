@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Container,
   Flex,
@@ -19,7 +19,7 @@ import {
   AlertDialogCloseButton,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { SettingsIcon, AddIcon } from "@chakra-ui/icons";
+import { SettingsIcon, AddIcon, ArrowLeftIcon } from "@chakra-ui/icons";
 
 function App() {
   const [birthDate, setBirthDate] = useState("");
@@ -87,6 +87,23 @@ function App() {
     return () => clearInterval(intervalRef.current);
   }, []);
 
+  const handleShare = useCallback(() => {
+    const shareData = {
+      title: "Dogs Live Long",
+      text: "Calculate Your Lived Time With One-Click!",
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      navigator
+        .share(shareData)
+        .then(() => console.log("Share successful"))
+        .catch((error) => console.log("Error sharing:", error));
+    } else {
+      alert("Sharing is not supported on this browser.");
+    }
+  }, []);
+
   return (
     <>
       <Container
@@ -99,6 +116,14 @@ function App() {
         color="#262626"
       >
         <Flex p={2} justify={"end"}>
+          <IconButton
+            isRound={true}
+            size={isLargeScreen ? "md" : "sm"}
+            colorScheme={"whiteAlpha"}
+            aria-label="ArrowLeftIcon"
+            icon={<ArrowLeftIcon />}
+            onClick={handleShare}
+          />
           <IconButton
             isRound={true}
             size={isLargeScreen ? "md" : "sm"}
